@@ -1,5 +1,6 @@
 "use client"
 
+import { Suspense } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { FadeIn } from "@/components/animations"
@@ -7,7 +8,7 @@ import { AlertCircle } from "lucide-react"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 
-export default function AuthError() {
+function AuthErrorContent() {
   const searchParams = useSearchParams()
   const error = searchParams.get("error")
 
@@ -44,5 +45,26 @@ export default function AuthError() {
         </Card>
       </FadeIn>
     </div>
+  )
+}
+
+export default function AuthError() {
+  return (
+    <Suspense fallback={
+      <div className="container flex items-center justify-center min-h-[80vh] px-4 py-12">
+        <Card className="w-full max-w-md mx-auto">
+          <CardHeader className="space-y-1 text-center">
+            <CardTitle className="text-2xl font-bold">Loading...</CardTitle>
+          </CardHeader>
+          <CardContent className="grid gap-4">
+            <p className="text-sm text-center text-muted-foreground">
+              Please wait while we process your request...
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    }>
+      <AuthErrorContent />
+    </Suspense>
   )
 } 

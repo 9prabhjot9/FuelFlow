@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, Suspense } from "react"
 import { signOut } from "next-auth/react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -9,7 +9,7 @@ import { LogOut } from "lucide-react"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 
-export default function SignOut() {
+function SignOutContent() {
   const [isLoading, setIsLoading] = useState(false)
   const searchParams = useSearchParams()
   const callbackUrl = searchParams.get("callbackUrl") || "/"
@@ -73,5 +73,26 @@ export default function SignOut() {
         </Card>
       </FadeIn>
     </div>
+  )
+}
+
+export default function SignOut() {
+  return (
+    <Suspense fallback={
+      <div className="container flex items-center justify-center min-h-[80vh] px-4 py-12">
+        <Card className="w-full max-w-md mx-auto">
+          <CardHeader className="space-y-1 text-center">
+            <CardTitle className="text-2xl font-bold">Loading...</CardTitle>
+          </CardHeader>
+          <CardContent className="grid gap-4">
+            <p className="text-sm text-center text-muted-foreground">
+              Please wait while we process your request...
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    }>
+      <SignOutContent />
+    </Suspense>
   )
 } 
